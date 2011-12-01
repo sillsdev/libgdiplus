@@ -1203,10 +1203,10 @@ GdipAddPathString (GpPath *path, GDIPCONST WCHAR *string, int length,
 		return status;
 	}
 
+#ifdef USE_PANGO_RENDERING
 	if (layoutRect)
 		cairo_move_to (cr, layoutRect->X, layoutRect->Y + font->sizeInPixels);
 
-#ifdef USE_PANGO_RENDERING
 	{
 	GpRectF box;
 	PangoLayout* layout; 
@@ -1222,6 +1222,39 @@ GdipAddPathString (GpPath *path, GDIPCONST WCHAR *string, int length,
 	cairo_set_font_size (cr, font->sizeInPixels);
 	/* TODO - deal with layoutRect, format... ideally we would be calling a subset
 	   of GdipDrawString that already does everything *and* preserve the whole path */
+
+	cairo_text_extents(cr, utf8, &extents);
+	double deltaX = 0.0;
+	double deltaY = 0.0;
+
+	/* horizontal alignment */
+	switch (format->alignment) {
+		case StringAlignmentNear:
+			break; // do nothing
+		case StringAlignmentCenter:
+			deltaX = (layoutRect->Width - extents.x_advance) / 2.0;
+			break;
+		case StringAlignmentFar:
+			deltaX = layoutRect->Width - extents.x_advance;
+			break;
+	}
+
+	/* vertical alignment */
+	switch (format->lineAlignment) {
+		case StringAlignmentNear:
+			deltaY = font->sizeInPixels;
+			break; // do nothing
+		case StringAlignmentCenter:
+			deltaY = (layoutRect->Height + font->sizeInPixels - extents.y_advance) / 2.0;
+			break;
+		case StringAlignmentFar:
+			deltaY = layoutRect->Height;
+			break;
+	}
+
+	if (layoutRect)
+		cairo_move_to (cr, layoutRect->X + deltaX, layoutRect->Y + deltaY);
+
 	cairo_text_path (cr, (const char*)utf8);
 #endif
 
