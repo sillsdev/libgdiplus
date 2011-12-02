@@ -1,0 +1,34 @@
+fieldworks-libgdiplus (2.10-1) oneiric; urgency=low
+
+  * Upgrade to upstream 2.10
+
+ -- Sue Newland <sue_newland@sil.org>  Fri, 04 Nov 2011 10:53:02 -0600
+
+fieldworks-libgdiplus (2.8.1-2) maverick; urgency=low
+
+  * Add patch
+    +missing-glib-2.0
+
+ -- Sue Newland <sue_newland@sil.org>  Mon, 04 Apr 2011 11:26:14 -0600
+
+fieldworks-libgdiplus (2.8.1-1) unstable; urgency=low
+
+  * Upgrade to upstream 2.8.1
+
+ -- Neil Mayhew <neil_mayhew@sil.org>  Fri, 24 Dec 2010 12:43:14 -0700
+
+fieldworks-libgdiplus (2.8-1) unstable; urgency=low
+
+  * Upgrade to upstream 2.8
+  * Add and remove patches:
+
+    -bug-606412_gdiplus_DrawImage.patch
+    +bug-606204_gdiplus-AddPathString.patch
+
+ -- Neil Mayhew <neil_mayhew@sil.org>  Fri, 19 Nov 2010 12:44:52 -0700
+
+fieldworks-libgdiplus (2.7-1) unstable; urgency=low
+
+  * Initial release (from svn r152577)
+
+ -- Neil Mayhew <neil_mayhew@sil.org>  Thu, 20 May 2010 17:23:40 -0600
