@@ -1,0 +1,17 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/autotools.mk
+
+LIBFW = /usr/lib/fieldworks
+DEB_CONFIGURE_EXTRA_FLAGS = --prefix=$(LIBFW)/mono --sysconfdir=$(LIBFW)/mono/etc
+#DEB_CONFIGURE_NORMAL_ARGS = ...
+#DEB_CONFIGURE_SCRIPT_ENV += LDFLAGS="..."
+
+DEB_BUILD_OPTIONS = nocheck
+# Stop cdbs from stupidly setting CPPFLAGS to ""
+DEB_MAKE_EXTRA_ARGS =
+
+DEB_SHLIBDEPS_INCLUDE = $(LIBFW)
+#DEB_DH_MAKESHLIBS_ARGS_ALL = -X$(LIBFW)/
+DEB_DH_STRIP_ARGS = -k
