@@ -173,10 +173,10 @@ gdip_pango_setup_layout (GpGraphics *graphics, GDIPCONST WCHAR *stringUnicode, i
 	double clipy2;
 	int trimSpace;      /* whether or not to trim the space */
 
-	gchar *text = g_utf16_to_utf8 (stringUnicode, length, NULL, NULL, NULL);
+	gchar *text = ucs2_to_utf8 (stringUnicode, length);
 	if (!text)
 		return NULL;
-	length = g_utf8_strlen (text, -1);
+	length = strlen(text);
 
 	if (charsRemoved) {
 		(*charsRemoved) = GdipAlloc (sizeof (int) * length);
@@ -498,8 +498,6 @@ pango_DrawString (GpGraphics *graphics, GDIPCONST WCHAR *stringUnicode, int leng
 	PangoLayout *layout;
 	RectF box;
 
-	// g_warning ("**** pango_DrawString:");
-
 	/* Setup cairo */
 	if (brush) {
 		gdip_brush_setup (graphics, brush);
@@ -532,8 +530,6 @@ pango_MeasureString (GpGraphics *graphics, GDIPCONST WCHAR *stringUnicode, int l
 	PangoRectangle logical;
 	PangoLayoutIter *iter;
 	int *charsRemoved = NULL;
-
-	// g_warning ("**** pango_MeasureString:");
 
 	cairo_save (graphics->ct);
 
