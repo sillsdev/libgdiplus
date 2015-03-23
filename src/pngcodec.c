@@ -401,6 +401,7 @@ gdip_load_png_image_from_file_or_stream (FILE *fp, GetBytesDelegate getBytesFunc
 		png_bytep *row_pointers;
 		BYTE *rawptr;
 		int i, j;
+		BYTE	alpha[4];	/* transparency values for 2bpp */
 
 		width = png_get_image_width (png_ptr, info_ptr);
 		height = png_get_image_height (png_ptr, info_ptr);
@@ -415,6 +416,7 @@ gdip_load_png_image_from_file_or_stream (FILE *fp, GetBytesDelegate getBytesFunc
 
 		interlace = png_get_interlace_type (png_ptr, info_ptr);
 
+		/* NB: none of these png_set_* methods actually do anything after png_read_png() is called! */
 		/* According to the libpng manual, this sequence is equivalent to
 		* using the PNG_TRANSFORM_EXPAND flag in png_read_png. */
 		if (color_type == PNG_COLOR_TYPE_PALETTE) {
@@ -482,11 +484,24 @@ gdip_load_png_image_from_file_or_stream (FILE *fp, GetBytesDelegate getBytesFunc
 			}
 
 			case 1:
+				if (bit_depth == 2) {
+					/* Make sure transparency is respected for 2bpp images. */
+					memset(alpha, 0xFF, 4);	/* default to fully opaque */
+					int num_trans = 0;
+					BYTE * trans = NULL;
+					png_color_16p dummy;
+					if (png_get_tRNS(png_ptr, info_ptr, &trans, &num_trans, &dummy)) {
+						if (num_trans > 0 && trans != NULL) {
+							memcpy(alpha, trans, MIN(num_trans, 4));
+						}
+					}
+				}
 				for (i = 0; i < height; i++) {
 					png_bytep rowp = row_pointers[i];
+					rawptr = rawdata + i * stride;	/* Ensure each output row starts at the right place. */
 					if (bit_depth == 2) {
 						// 4 pixels for each byte
-						for (j = 0; j < (width >> bit_depth); j++) {
+						for (j = 0; j < width; j++) {
 							png_byte palette = 0;
 							png_byte pix = *rowp++;
 
@@ -495,28 +510,34 @@ gdip_load_png_image_from_file_or_stream (FILE *fp, GetBytesDelegate getBytesFunc
 								info_ptr->palette[palette].blue,
 								info_ptr->palette[palette].green,
 								info_ptr->palette[palette].red,
-								0xFF); /* alpha */
+								alpha[palette]);
+							if (++j >= width)
+								break;
 
 							palette = (pix >> 4) & 0x03;
 							set_pixel_bgra (rawptr, 4,
 								info_ptr->palette[palette].blue,
 								info_ptr->palette[palette].green,
 								info_ptr->palette[palette].red,
-								0xFF); /* alpha */
+								alpha[palette]);
+							if (++j >= width)
+								break;
 
 							palette = (pix >> 2) & 0x03;
 							set_pixel_bgra (rawptr, 8,
 								info_ptr->palette[palette].blue,
 								info_ptr->palette[palette].green,
 								info_ptr->palette[palette].red,
-								0xFF); /* alpha */
+								alpha[palette]);
+							if (++j >= width)
+								break;
 
 							palette = pix & 0x03;
 							set_pixel_bgra (rawptr, 12,
 								info_ptr->palette[palette].blue,
 								info_ptr->palette[palette].green,
 								info_ptr->palette[palette].red,
-								0xFF); /* alpha */
+								alpha[palette]);
 							rawptr += 16;
 						}
 					} else {
@@ -557,6 +578,10 @@ gdip_load_png_image_from_file_or_stream (FILE *fp, GetBytesDelegate getBytesFunc
 			// doesn't apply to 2bpp images
 			result->active_bitmap->pixel_format = PixelFormat8bppIndexed;
 			result->active_bitmap->image_flags = ImageFlagsColorSpaceGRAY;
+		} else if ((channels == 1) && (color_type == PNG_COLOR_TYPE_PALETTE)) {
+			// does apply to (what were) 2bpp images
+			result->active_bitmap->image_flags = ImageFlagsColorSpaceRGB;
+			result->active_bitmap->image_flags |= ImageFlagsHasAlpha;
 		}
 
 		if (color_type & PNG_COLOR_MASK_ALPHA)
