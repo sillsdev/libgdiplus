@@ -1,0 +1,7 @@
+Verified+1: Jenkins CI <jenkins@sil.org>
+Code-Review+2: Eberhard Beilharz <eb1@sil.org>
+Submitted-by: Neil Mayhew <neil_mayhew@sil.org>
+Submitted-at: Thu, 25 Jun 2015 00:54:53 +0000
+Reviewed-on: https://gerrit.lsdev.sil.org/3102
+Project: libgdiplus
+Branch: refs/heads/develop
