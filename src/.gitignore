@@ -3,5 +3,5 @@
 Makefile
 Makefile.in
 *.la
-.deps/
-.libs/
+.deps
+.libs

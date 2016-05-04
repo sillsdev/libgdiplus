@@ -14,7 +14,7 @@ DEPS =						\
 
 LDADDS =					\
 	$(top_builddir)/src/libgdiplus.la \
-	$(GDIPLUS_LIBS)
+	-lm
 
 noinst_PROGRAMS =			\
 	testgdi testbits testclip testreversepath
@@ -48,3 +48,9 @@ EXTRA_DIST =			\
 	$(testbits_SOURCES)	\
 	$(testclip_SOURCES)	\
 	$(testreversepath_SOURCES)
+
+TESTS = \
+	testbits \
+	testclip \
+	testreversepath \
+	$(NULL)

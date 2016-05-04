@@ -37,7 +37,7 @@ if [ -z "$LIBTOOLIZE" ]; then
   fi
 fi
 
-(grep "^AM_PROG_LIBTOOL" $srcdir/configure.in >/dev/null) && {
+(grep "^AM_PROG_LIBTOOL" $srcdir/configure.ac >/dev/null) && {
   ($LIBTOOLIZE --version) < /dev/null > /dev/null 2>&1 || {
     echo
     echo "**Error**: You must have \`libtool' installed to compile Mono."
@@ -47,8 +47,8 @@ fi
   }
 }
 
-grep "^AM_GNU_GETTEXT" $srcdir/configure.in >/dev/null && {
-  grep "sed.*POTFILES" $srcdir/configure.in >/dev/null || \
+grep "^AM_GNU_GETTEXT" $srcdir/configure.ac >/dev/null && {
+  grep "sed.*POTFILES" $srcdir/configure.ac >/dev/null || \
   (gettext --version) < /dev/null > /dev/null 2>&1 || {
     echo
     echo "**Error**: You must have \`gettext' installed to compile Mono."
@@ -82,7 +82,7 @@ if test "$DIE" -eq 1; then
   exit 1
 fi
 
-if test -z "$*"; then
+if test x$NOCONFIGURE = x && test -z "$*"; then
   echo "**Warning**: I am going to run \`configure' with no arguments."
   echo "If you wish to pass any to it, please specify them on the"
   echo \`$0\'" command line."
@@ -95,7 +95,7 @@ xlc )
 esac
 
 
-if grep "^AM_PROG_LIBTOOL" configure.in >/dev/null; then
+if grep "^AM_PROG_LIBTOOL" configure.ac >/dev/null; then
   if test -z "$NO_LIBTOOLIZE" ; then 
     echo "Running libtoolize..."
     $LIBTOOLIZE --force --copy
@@ -113,7 +113,7 @@ aclocal $ACLOCAL_FLAGS || {
   exit 1
 }
 
-if grep "^AC_CONFIG_HEADERS" configure.in >/dev/null; then
+if grep "^AC_CONFIG_HEADERS" configure.ac >/dev/null; then
   echo "Running autoheader..."
   autoheader || { echo "**Error**: autoheader failed."; exit 1; }
 fi
@@ -125,30 +125,11 @@ echo "Running autoconf ..."
 autoconf || { echo "**Error**: autoconf failed."; exit 1; }
 
 CONF_OPTIONS=""
-CAIRO_AUTOGEN_REQUIRED=1
 until [ -z "$1" ]
 do
-  if [ "$1" = "--skip-cairo" ]; then
-    echo Skipping internal pixman and cairo ...
-    CAIRO_AUTOGEN_REQUIRED=0
-  fi
   CONF_OPTIONS="$CONF_OPTIONS $1"
   shift
 done
-
-if test "$CAIRO_AUTOGEN_REQUIRED" -eq 1; then
-  if test -d $srcdir/pixman; then
-    echo Running pixman/autogen.sh ...
-    (cd $srcdir/pixman ; NOCONFIGURE=1 ./autogen.sh "$@")
-    echo Done running autogen.sh in pixman...
-  fi
-  if test -d $srcdir/cairo; then
-    echo Running cairo/autogen.sh ...
-     (cd $srcdir/cairo ; NOCONFIGURE=1 ./autogen.sh "$@")
-     echo Done running autogen.sh in cairo...
-  fi
-fi
-
 
 conf_flags="--enable-maintainer-mode --enable-compile-warnings" #--enable-iso-c
 

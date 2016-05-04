@@ -122,7 +122,7 @@ gdip_load_png_properties (png_structp png_ptr, png_infop info_ptr, png_infop end
 		png_uint_32	res_y;
 		png_get_pHYs( png_ptr, info_ptr, &res_x, &res_y, &unit_type );
 		if (unit_type == PNG_RESOLUTION_METER) {
-		bitmap_data->image_flags |= ImageFlagsHasRealDPI;
+			bitmap_data->image_flags |= ImageFlagsHasRealDPI;
 			bitmap_data->dpi_horz = res_x * 0.0254;
 			bitmap_data->dpi_vert = res_y * 0.0254;
 		}
@@ -353,28 +353,28 @@ gdip_load_png_image_from_file_or_stream (FILE *fp, GetBytesDelegate getBytesFunc
 			int num_trans;
 			png_color_16p trans_color;
 
-		/* Make sure transparency is respected. */
+			/* Make sure transparency is respected. */
 			png_get_tRNS( png_ptr, info_ptr, &trans_alpha, &num_trans, &trans_color );
 			if (num_trans > 0) {
-			palette->Flags |= PaletteFlagsHasAlpha;
-			colourspace_flag |= ImageFlagsHasAlpha;
+				palette->Flags |= PaletteFlagsHasAlpha;
+				colourspace_flag |= ImageFlagsHasAlpha;
 
 				if (num_trans > num_palette) {
 					num_trans = num_palette;
-			}
+				}
 
 				for (i=0; i < num_trans; i++) {
-				set_pixel_bgra(&palette->Entries[i], 0,
+					set_pixel_bgra(&palette->Entries[i], 0,
 							png_palette[i].blue,
 							png_palette[i].green,
 							png_palette[i].red,
 #if PNG_LIBPNG_VER > 10399
 							trans_alpha [i]); /* alpha */
 #else
-						info_ptr->trans[i]); /* alpha */
+							info_ptr->trans[i]); /* alpha */
 #endif
+				}
 			}
-		}
 		}
 
 		result = gdip_bitmap_new_with_frame (&gdip_image_frameDimension_page_guid, TRUE);

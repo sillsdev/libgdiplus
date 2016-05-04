@@ -287,11 +287,6 @@ MeasureString (GpGraphics *graphics, GDIPCONST WCHAR *stringUnicode, int *length
 
 			/* Boy, this must be slow, FIXME somehow */
 			default: {
-				/* ComboBox content should show as much as possible... */
-				if (format->formatFlags & StringFormatFlagsLineLimit && format->trimming == StringTrimmingCharacter) {
-					CurrentDetail->Flags |= STRING_DETAIL_BREAK;
-					break;
-				}
 				if (((format->formatFlags & StringFormatFlagsNoWrap)==0) || ((format->trimming != StringTrimmingCharacter) && (format->trimming != StringTrimmingNone))) {
 					break;
 				}

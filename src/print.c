@@ -51,8 +51,6 @@ GdipGetPostScriptGraphicsContext (char* filename, int width, int height, double 
 	gfx = gdip_graphics_new (surface);
 	gfx->dpi_x = dpix;
 	gfx->dpi_y = dpiy;
-	gfx->bounds.Width = width;
-	gfx->bounds.Height = height;
 	cairo_surface_destroy (surface);
 
 	gfx->type = gtPostScript;

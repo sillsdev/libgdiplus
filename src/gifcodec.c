@@ -857,7 +857,7 @@ gdip_save_gif_image (void *stream, GpImage *image, BOOL from_file)
 #else
 				QuantizeBuffer(
 #endif
-						bitmap_data->width, bitmap_data->height, &cmap_size,
+						bitmap_data->width, bitmap_data->height, &cmap_size, 
 						red,  green, blue, pixbuf, cmap->Colors) == GIF_ERROR) {
 					goto error;
 				}
@@ -891,8 +891,8 @@ gdip_save_gif_image (void *stream, GpImage *image, BOOL from_file)
 						EGifPutExtensionBlock(fp, 3, Buffer);
 						EGifPutExtensionTrailer(fp);
 #else
-						EGifPutExtensionFirst(fp, APPLICATION_EXT_FUNC_CODE, 11, "NETSCAPE2.0");
-						EGifPutExtensionLast(fp, APPLICATION_EXT_FUNC_CODE, 3, Buffer);
+						EGifPutExtensionFirst(fp, APPLICATION_EXT_FUNC_CODE, 11, "NETSCAPE2.0"); 
+						EGifPutExtensionLast(fp, APPLICATION_EXT_FUNC_CODE, 3, Buffer); 
 #endif
 					}
 				}

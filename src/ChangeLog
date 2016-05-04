@@ -1,7 +1,3 @@
-2010-07-21 Tom Hindle  <tom_hindle@sil.org>
-	* graphics-path.c : use StringFormat parameter of 
-		GdipAddPathString method. Fixes part of #606204
-
 2010-07-20  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* image.c: Use DPI from source image when creating a Graphics
