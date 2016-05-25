@@ -1,0 +1,7 @@
+Verified+1: Jenkins CI <jenkins@sil.org>
+Code-Review+2: Eberhard Beilharz <eb1@sil.org>
+Submitted-by: Stephen McConnel <stephen_mcconnel@sil.org>
+Submitted-at: Wed, 25 May 2016 17:16:08 +0000
+Reviewed-on: https://gerrit.lsdev.sil.org/4255
+Project: libgdiplus
+Branch: refs/heads/develop
