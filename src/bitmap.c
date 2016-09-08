@@ -1065,8 +1065,6 @@ GdipCloneBitmapAreaI (int x, int y, int width, int height, PixelFormat format,
 					  GpBitmap *original, GpBitmap **bitmap)
 {
 	GpBitmap	*result;
-	FrameData	*frame;
-	BitmapData	*bitmap_data;
 	Rect		sr = { x, y, width, height };
 	Rect		dr = { 0, 0, width, height };
 	GpStatus	status;
@@ -1092,7 +1090,10 @@ GdipCloneBitmapAreaI (int x, int y, int width, int height, PixelFormat format,
 	}
 
 	result->cairo_format = original->cairo_format;
-		
+
+	result->active_bitmap->dpi_horz = original->active_bitmap->dpi_horz;
+	result->active_bitmap->dpi_vert = original->active_bitmap->dpi_vert;
+
 	*bitmap = result;
 	return Ok;
 
